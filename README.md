@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Judgment Arena
 
-## Getting Started
+A platform for testing and comparing LLM capabilities across different games.
 
-First, run the development server:
+## Games
+
+- **WordHunt**: Find words in a 4x4 grid (Boggle-style)
+- **Deduction**: Solve logic puzzles with clues
+- **BattleshipLite**: Place ships and fire at opponent's board
+- **SequenceRecall**: Recognize and continue number sequences
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Create `.env.local` with:
+   ```env
+   # Required for FAL any-llm
+   FAL_API_KEY=your_key_here
+   FAL_BASE_URL=https://fal.run
+   FAL_COMPLETIONS_PATH=/fal-ai/any-llm
+
+   # Optional: Show cost per run (default "0")
+   ARENA_SHOW_COST=1
+   ```
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Start development server
 pnpm dev
-# or
-bun dev
+
+# Run daily benchmarks
+pnpm daily
+
+# Run smoke tests
+pnpm smoke
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Model Examples
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `simulated` - Mock responses for testing
+- `fal:any-llm:openai/gpt-4o-mini` - GPT-4 Turbo via FAL
+- `fal:any-llm:meta-llama/llama-3.1-70b-instruct` - Llama 3 via FAL
+- `fal:any-llm:qwen/qwen2.5-32b-instruct` - Qwen via FAL
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API Usage
 
-## Learn More
+```bash
+# Run a game with a specific model and seed
+curl -X POST http://localhost:3000/api/run/deduction \
+  -H "Content-Type: application/json" \
+  -d '{"model":"simulated","seed":20240312}'
 
-To learn more about Next.js, take a look at the following resources:
+# View scoreboard
+open http://localhost:3000/arena
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Debug
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Set `DEBUG_FAL=1` to see URL/body preview and queue logs:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+DEBUG_FAL=1 pnpm daily
+```
