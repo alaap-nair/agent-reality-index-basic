@@ -1,6 +1,8 @@
 # Judgment Arena
 
 A platform for testing and comparing LLM capabilities across different games.
+Current status: Dashboard isn't where it needs to be but backend logic should be working
+LLM integration also needs to be more seamless, with a set of models being called, instead of hardcoded in .env.local
 
 ## Games
 
